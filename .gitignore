@@ -34,3 +34,8 @@ temp/
 # Build outputs
 dist/
 build/
+
+# Seed files (contain test data and credentials)
+scripts/seedAdmin.js
+scripts/seedMenu.js
+scripts/seedStaff.js
