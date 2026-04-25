@@ -13,6 +13,7 @@ router.get('/user/my-reviews', authMiddleware, reviewController.getUserReviews);
 router.post('/', authMiddleware, reviewController.submitReview);
 
 // Admin routes
+router.get('/admin/all', authMiddleware, adminMiddleware, reviewController.getAllReviews);
 router.get('/admin/pending', authMiddleware, adminMiddleware, reviewController.getPendingReviews);
 router.put('/:id/approve', authMiddleware, adminMiddleware, reviewController.approveReview);
 router.delete('/:id/reject', authMiddleware, adminMiddleware, reviewController.rejectReview);

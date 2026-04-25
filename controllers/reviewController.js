@@ -6,7 +6,7 @@ const getApprovedReviews = async (req, res) => {
   try {
     const reviews = await Review.find({ isApproved: true })
       .populate('userId', 'name')
-      .populate('menuItems', 'name')
+      .populate('bookingId', 'confirmationNumber')
       .sort({ createdAt: -1 });
     
     res.json(reviews);
@@ -20,10 +20,9 @@ const getReviewsForMenuItem = async (req, res) => {
   try {
     const { menuItemId } = req.params;
     
-    const reviews = await Review.find({ 
-      menuItems: menuItemId, 
-      isApproved: true 
-    })
+    // Reviews are linked to bookings, not menu items directly
+    // For now, return all approved reviews
+    const reviews = await Review.find({ isApproved: true })
       .populate('userId', 'name')
       .sort({ createdAt: -1 });
     
@@ -80,12 +79,26 @@ const getPendingReviews = async (req, res) => {
   try {
     const reviews = await Review.find({ isApproved: false })
       .populate('userId', 'name email')
-      .populate('menuItems', 'name')
+      .populate('bookingId', 'confirmationNumber reservationDate')
       .sort({ createdAt: -1 });
     
     res.json(reviews);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch pending reviews', error: error.message });
+  }
+};
+
+// Get all reviews for admin dashboard (Admin only)
+const getAllReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({})
+      .populate('userId', 'name email')
+      .populate('bookingId', 'confirmationNumber reservationDate')
+      .sort({ createdAt: -1 });
+    
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
   }
 };
 
@@ -170,6 +183,7 @@ module.exports = {
   getReviewsForMenuItem,
   submitReview,
   getPendingReviews,
+  getAllReviews,
   approveReview,
   rejectReview,
   likeReview,

@@ -60,6 +60,21 @@ const bookingSchema = new mongoose.Schema({
     default: 'pending'
   },
   
+  // Cancellation tracking
+  cancelledBy: {
+    type: String,
+    enum: ['user', 'admin', null],
+    default: null
+  },
+  cancellationReason: {
+    type: String,
+    default: null
+  },
+  cancelledAt: {
+    type: Date,
+    default: null
+  },
+  
   // Confirmation
   confirmationNumber: {
     type: String,
